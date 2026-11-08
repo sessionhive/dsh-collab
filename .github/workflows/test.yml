@@ -1,0 +1,30 @@
+name: test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [20, 22]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - name: Core suites
+        run: |
+          node tests/run.mjs
+          node tests/load.mjs
+          node tests/auto-index.mjs
+          node tests/static-checks.mjs
+      - name: Portability suites
+        run: |
+          node tests/bootstrap-isolated.mjs
+          node tests/config-dataroot.mjs

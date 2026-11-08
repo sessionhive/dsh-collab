@@ -1,0 +1,42 @@
+name: Bug report
+description: Something broke or behaved unexpectedly
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. Please redact secrets and private paths.
+  - type: input
+    id: plugin-version
+    attributes:
+      label: Plugin version
+      description: From `/plugin-info` or `package.json`
+      placeholder: 0.1.0
+    validations:
+      required: true
+  - type: input
+    id: dsh-version
+    attributes:
+      label: DSH version / profile
+      placeholder: DSH 0.2.x desktop profile
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: Steps, observed behaviour, expected behaviour
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Order ID, paths, relevant log lines (`_meta/logs/plugin.log`, `events/violations.jsonl`)
+      render: text
+  - type: textarea
+    id: board
+    attributes:
+      label: Board / self-check output (optional)
+      description: `/ops/selfcheck` result or a screenshot path

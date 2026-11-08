@@ -1,5 +1,7 @@
 # dsh-collab（中文）
 
+[![test](https://github.com/sessionhive/dsh-collab/actions/workflows/test.yml/badge.svg)](https://github.com/sessionhive/dsh-collab/actions/workflows/test.yml)
+
 [English](README.en.md) · **中文**
 
 > **非 DeepSeek 官方项目**：这是社区插件，与 DeepSeek 官方无隶属、无背书关系。
@@ -180,6 +182,10 @@ tar -xzf dsh-workbench-core-0.1.0.tgz --strip-components=1 -C <profile>/node_mod
 
 - 0.1.x：稳定性、外部验收、文档。
 - 之后：更丰富的看板分析、可配置策略、英文优先文档、`1.0` 冻结文件格式。
+
+## 贡献
+
+欢迎 issue 与小型 PR：见 [CONTRIBUTING.md](CONTRIBUTING.md)。
 
 ## 许可
 

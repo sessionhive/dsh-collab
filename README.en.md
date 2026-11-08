@@ -1,5 +1,7 @@
 # dsh-collab
 
+[![test](https://github.com/sessionhive/dsh-collab/actions/workflows/test.yml/badge.svg)](https://github.com/sessionhive/dsh-collab/actions/workflows/test.yml)
+
 [中文说明](README.md) · **English**
 
 > **Unofficial community plugin for [DeepSeek Harness (DSH)](https://github.com/deepseek-ai/deepseek-harness).**
@@ -180,6 +182,10 @@ Restart DSH → **Settings → 会话协作 / Session Collaboration**.
 
 - Release 0.1.x: stability, external acceptance, docs.
 - Later: richer board analytics, configurable policies, English-first docs, 1.0 freeze of file formats.
+
+## Contributing
+
+Issues and small PRs are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
