@@ -1,186 +1,186 @@
-# dsh-collab
+# dsh-collab（中文）
 
-[中文说明](README.zh.md) · **English**
+[English](README.en.md) · **中文**
 
-> **Unofficial community plugin for [DeepSeek Harness (DSH)](https://github.com/deepseek-ai/deepseek-harness).**
-> Not affiliated with, endorsed by, or supported by DeepSeek. DSH is a trademark of its owner.
+> **非 DeepSeek 官方项目**：这是社区插件，与 DeepSeek 官方无隶属、无背书关系。
+> DSH 商标归其所有者。
 
-**Turn several AI sessions into a small, auditable team: work orders, handoff, and file-based memory.**
+**把多个 AI 会话变成一个小而可审计的团队：工单、交接、文件记忆。**
 
 ---
 
-## The problem
+## 要解决的问题
 
-Running many AI sessions in one workspace looks great until it doesn't:
+在一个工作区里同时跑多个 AI 会话，看起来很美，直到：
 
-- **Context loss** — switch or compact a session and it forgets what it was doing.
-- **Write chaos** — sessions overwrite each other's notes; formats drift; nobody knows the source of truth.
-- **Invisible work** — between "dispatched" and "done" there is nothing: no progress, no ack, no evidence, no idea who is blocked.
-- **Silent stalls** — one session waits for another and nobody is woken up.
+- **换会话就失忆**——压缩或切换后，它忘了自己在干什么。
+- **各写各的**——互相覆盖、格式漂移，没人知道哪份是真源。
+- **过程不可见**——“派了”和“做完了”之间什么都没有：没进度、没接单、没证据，也不知道谁卡住。
+- **静默停摆**——一个会话在等另一个，没人被叫醒。
 
-`dsh-collab` turns that chat-based coordination into an explicit, file-backed workflow.
+`dsh-collab` 把这种靠聊天的协作，变成显式、落文件、可追踪的流程。
 
-## What it is (three pillars)
+## 三个支柱
 
-| Pillar | Meaning |
+| 支柱 | 含义 |
 |---|---|
-| **Memory lives in files, not in context** | Each session has an identity card, a summary (state), dated memory notes and an index. A fresh session can pick up in seconds. |
-| **Writes go through tools** | AI sessions call `wb_read` / `wb_write` instead of editing state files directly. Every write is validated (sources required, size caps, own-directory-only) and derived files are refreshed automatically. |
-| **Collaboration runs on work orders** | Dispatch → handoff → receipt. One order end to end, with per-leg timings, evidence refs and a board that shows exactly where each order is. |
+| **记忆在文件里，不在上下文里** | 每个会话有身份卡、状态摘要、按日期的记忆和索引；新会话几秒就能接上。 |
+| **写入走工具** | AI 只调 `wb_read` / `wb_write`，不直接改状态文件；每次写入都校验（必须带来源、体量上限、只写自己目录），派生文件自动刷新。 |
+| **协作靠工单** | 派单 → 转交 → 回执；一单到底，记录每棒耗时、证据路径，看板显示每单卡在哪。 |
 
 ---
 
-## Features
+## 功能
 
-### 1. Work orders (the core)
+### 1. 工单（核心）
 
-- **One task, one order.** Composite requests (implement + test + document) become **one** order with a `flow`; the same task hash cannot be opened twice while the first is open.
-- **Daily IDs.** `dhNNN` resets every day (`collab/YYYY-MM-DD/dh001-<assignee>.md`); cross-day references use `YYYY-MM-DD/dhNNN`.
-- **Relay by flow.** The owner decides which legs belong to whom. Each holder acknowledges, works and `handoff`s to the next leg; handing off wakes the next session automatically.
-- **Takeover is implicit.** The next holder's first `progress` is recorded as a takeover; no extra call.
-- **Guards against skipping.** A non-final holder cannot `close` — the plugin converts the attempt into a handoff and warns. Final holders hand the order back to the owner.
-- **Owner acceptance.** The owner `verify`s (or `reject`s) evidence and closes; closing writes a receipt back to the owner, an auto-memory entry if the assignee forgot one, and updates the summary projection.
-- **Comments, not new orders.** `comment` keeps follow-ups, blame-free notes and nudges inside the same order.
-- **Evidence discipline.** `submit` / `handoff` / `verify` / `close` require refs; refs are checked for existence, readability, traversal (`..`) and size (≤ 20 MB).
-- **Done index.** `collab/done-index.md` lists finished/cancelled orders grouped by date with time, ID, title, assignee, status and path.
-- **Order metrics.** Per-leg start/submit/handoff/verify/close timestamps, durations, handoff count and total time are derived from events.
+- **一任务一单**：复合需求（实现+测试+文档）建**一张**单，用 `flow` 接力；同任务哈希在未关闭前不能重复建单。
+- **按日单号**：`dhNNN` 每天从 1 开始（`collab/YYYY-MM-DD/dh001-<assignee>.md`）；跨日引用写 `YYYY-MM-DD/dhNNN`。
+- **按 flow 接力**：主负责人决定哪些部分归谁；每一棒先 ack、再干活、然后 `handoff` 给下一棒；交接会自动唤醒下一棒。
+- **接管自动**：下一棒第一次 `progress` 即记为接管，不用额外调用。
+- **防跳步**：非最后一棒不能 `close`——插件会把它转成交接并警告；最后一棒负责交回主负责人。
+- **主负责人验收**：`verify` / `reject` 带证据；关单写回执给主负责人；assignee 忘了写记忆时自动补一条；summary 投影同步更新。
+- **单内评论**：`comment` 把补充、催办、讨论留在同一张单里，不另开单。
+- **证据纪律**：`submit` / `handoff` / `verify` / `close` 必须带 refs；refs 会校验存在性、可读性、`..` 穿越与大小（≤ 20 MB）。
+- **完成索引**：`collab/done-index.md` 按日期分段列出完成/取消的单（时间/单号/标题/负责人/状态/路径）。
+- **工单指标**：每棒的开始/提交/交接/验收/关单时间、耗时、交接次数与总时长，均由事件推导。
 
-### 2. Memory
+### 2. 记忆
 
-- **Per-session files.** `agents/<id>/card.json` (identity, mission, boundaries, skills), `summary.md` (doing / next / blockers / pointers), `memory/<date>/*.md` (conclusions with sources).
-- **Automatic projection.** `wb_write(note)` appends a dated note, recomputes `summary.md` from the latest conclusion and keeps `memory/INDEX.md` as a compact timeline (≤ 120 lines, older months folded).
-- **Size discipline & rotation.** Notes are capped (~2 KB per file); overflow rotates into `.detail*.md` without losing content.
-- **Session timeline.** `sessions.jsonl` records `entry`, `handover`, `accept` and `end` events (ISO local time), so you can audit who took over when.
-- **Handover.** Rebinding a session generates a relay summary (card + summary + recent memory + open orders), seeds the new session, and renames the old one to `name (handed over MM-DD HH:mm)`.
-- **Entry seed.** Every binding (new / existing session / handover) sends a short seed: read your card + summary, check the board, no order → reply only, write back when real work happened.
+- **每个会话的文件**：`agents/<id>/card.json`（身份/职责/边界/技能）、`summary.md`（在做/下一步/卡点/指针）、`memory/<日期>/*.md`（带来源的结论）。
+- **自动投影**：`wb_write(note)` 追加按日期的结论，重算 `summary.md`，并把 `memory/INDEX.md` 维护成紧凑时间线（≤ 120 行，更早按月折叠）。
+- **体量纪律与轮转**：单文件约 2 KB 上限；超出轮转到 `.detail*.md`，内容不丢。
+- **会话时间线**：`sessions.jsonl` 记录 `entry / handover / accept / end`（ISO 本地时间），可审计谁何时接手。
+- **交接**：重绑会话时生成接力摘要（card + summary + 最近记忆 + 在途单），给新会话发 seed，旧会话改名为 `名字（已交接 MM-DD HH:mm）`。
+- **入场 seed**：任何绑定（新建/选已有/交接）都发短 seed：读卡与摘要、看板、无单即回、有实质工作才写回。
 
-### 3. Session lifecycle
+### 3. 会话生命周期
 
-- **Three states:** active (bound), pending (no session), archived (retired) — archived sessions are folded by default and kept out of the way.
-- **Handover / unbind / archive / restore / recycle / export snapshot.**
-- **Recycle bin** (`dataRoot/trash`) with item-level selection, right-click open, and a confirm-guarded empty action.
-- **Auto-created skills.** Creating a session without picking a skill creates and binds a starter `SKILL.md`; editing skills from the settings page is supported.
-- **Templates can be overridden** per installation: `<dataRoot>/shared/templates/{seed.md,dispatch.md}`.
+- **三态**：在用（已绑定）/ 待处理（无会话）/ 已归档（停用）——归档默认折叠，不挤占分组。
+- **交接 / 解绑 / 归档 / 恢复 / 回收 / 导出快照**。
+- **回收站**（`dataRoot/trash`）：按条目勾选、右键打开、清空需二次确认。
+- **自动建技能**：创建会话时未选技能会自动创建并绑定基础 `SKILL.md`；设置页支持编辑技能。
+- **模板可覆盖**：`<dataRoot>/shared/templates/{seed.md,dispatch.md}`。
 
-### 4. Board
+### 4. 看板
 
-- **Live dashboard** (`/plugins/workbench-core/board`): sessions, in-flight orders, today's completions, event stream and a learning card.
-- **Order panel & detail drawer:** click any order to see the full chain — flow legs, current owner, next hop, per-leg durations and an event timeline with evidence refs.
-- **Session table:** doing / next / blockers / open orders per session, clickable into a summary drawer.
-- **Themes:** auto / dark / light, persisted in config.
-- **Languages:** Chinese / English UI, event labels, statuses and date formats (fallback to Chinese for missing keys).
-- **Filters:** event type filter; historical events grouped and capped to keep the page fast.
+- **实时面板**（`/plugins/workbench-core/board`）：会话数、在途单、今日完成、事件流、学习卡。
+- **工单面板 + 详情抽屉**：点开任意单看完整链路——flow 各棒、当前负责人、下一棒、每棒耗时与事件时间线（含证据路径）。
+- **会话表**：每会话的在做/下一步/卡点/在途单，点开看摘要抽屉。
+- **主题**：auto / 深色 / 浅色，配置持久化。
+- **语言**：中/英 UI、事件标签、状态与日期格式（缺翻译回落中文）。
+- **筛选**：事件类型筛选；历史事件聚合/限量，保证页面快。
 
-### 5. Reliability & safety
+### 5. 可靠性与安全
 
-- **Evidence security:** refs are resolved against workspace/scene cwd, traversal rejected, unreadable or oversized files rejected, violations recorded.
-- **Wake reliability:** wake retries with backoff, an outbox, and degradation when the host session API is unavailable.
-- **Stale detection:** if a delivered order receives no ack/progress within the window, it is marked stale, the owner is notified, and the assignee is woken once more.
-- **Idempotency:** duplicate handoffs, acks and receipts are de-duplicated.
-- **Schema migration:** `schemaVersion` on config/registry plus an idempotent, rollback-aware migration on startup; `manifest.json` SHA-256 verification.
-- **Self-check:** `/ops/selfcheck` validates routes, data root, config, index consistency, templates, skills and version-vs-disk without depending on any shell scripts (works in standalone DSH).
-- **Warnings, not silent failures:** write-scope overflow, missing required fields and invalid actions return actionable warnings and are logged to `events/violations.jsonl`.
+- **证据安全**：refs 按工作区/会话 cwd 解析，拒绝 `..` 穿越、不可读与超大文件，违规记入 `violations.jsonl`。
+- **唤醒可靠**：wake 失败退避重试 + outbox；宿主会话 API 不可用时明确降级。
+- **stale 检测**：投递后窗口内无 ack/进度 → 标 stale、通知负责人、并再唤醒接单方一次。
+- **幂等**：重复 handoff / ack / receipt 去重。
+- **模式迁移**：config/registry 带 `schemaVersion`，启动时幂等迁移（失败可回滚）；`manifest.json` 做 SHA-256 校验。
+- **自检**：`/ops/selfcheck` 校验路由、数据根、配置、索引一致性、模板、技能、运行版本 vs 磁盘——**不依赖任何外壳脚本**，独立 DSH 可用。
+- **警告而非静默失败**：越界写入、必填项缺失、非法动作都返回可读 warning 并记录。
 
-### 6. Learning (zero-AI, opt-in tuning)
+### 6. 学习（零 AI，可关闭）
 
-- **Signal collection** from failures only: rejections, stale orders, violations, interruptions and explicit user feedback.
-- **Failure taxonomy** by rule ID first (missing evidence, over-reach, identity mismatch, handoff issues, timeouts) with keyword fallback.
-- **Weekly report** (`_meta/learn/weekly.md`): rework rate, stale rate, average order time, top failure modes, adjustment ledger.
-- **Board learning card:** current-version signals plus legacy signals for reference.
-- **Guarded auto-tuning:** first candidates (≥ 3 samples and ≥ 30 % share), then a 7-day observation window, then injection — limited to plugin defaults, at most 3 per week, versioned and reversible. Constitution and user rules are never touched automatically.
-- **Feedback button** on orders feeds the same loop.
+- **信号采集**：只收异常——拒绝、stale、违规、中断、用户显式反馈。
+- **失败分类**：优先按 rule_id（缺证据/越权写/身份错/交接/超时），关键词兜底。
+- **周报**（`_meta/learn/weekly.md`）：返工率、stale 率、单均时长、主要失败模式、调整台账。
+- **看板学习卡**：当前版本信号 + 历史信号（仅参考）。
+- **受控自动调优**：先候选（样本 ≥3 且占比 ≥30%）→ 7 天观察期 → 才注入；只改插件默认值，每周 ≤3 项，带版本、可回退；**不碰宪法与用户规则**。
+- **一键反馈**：单卡片/抽屉可标“顺利 / 卡住 / 有问题”，进入同一学习闭环。
 
-### 7. Developer & portability
+### 7. 开发与可移植
 
-- **No shell required.** Works in standalone DSH profiles: set `config.dataRoot`, restart, done.
-- **HTTP API** for everything the UI does (board data, sessions, orders, ops, selfcheck, i18n, config).
-- **Templates & i18n** are data-driven, so forks can adapt wording without touching logic.
-- **Tests:** 46 script suites covering protocol, board, learning, migration, external-profile acceptance.
+- **不需要外壳**：独立 DSH profile 配 `config.dataRoot`、重启即可用。
+- **HTTP API**：UI 用到的能力都有接口（看板数据、会话、工单、运维、自检、i18n、配置）。
+- **模板与 i18n 数据驱动**：改文案不用改逻辑。
+- **测试**：46 套脚本测试，覆盖协议、看板、学习、迁移、外部 profile 验收。
 
 ---
 
-## Quick start
+## 快速开始
 
 ```yaml
-# cordis.patch.yml of your DSH profile
+# 你的 DSH profile 的 cordis.patch.yml
 - insert:
     - id: workbench-core
       name: dsh-workbench-core
       config:
-        dataRoot: '/absolute/path/to/.dsh'   # where collaboration data lives
+        dataRoot: '/你的/.dsh/绝对路径'   # 协作数据落在这里
 ```
 
 ```bash
-# install the package into your profile's node_modules (release tarball or repo)
+# 把包解压到 profile 的 node_modules（release tarball 或仓库源码）
 tar -xzf dsh-workbench-core-0.1.0.tgz --strip-components=1 -C <profile>/node_modules/dsh-workbench-core
 ```
 
-Restart DSH → **Settings → 会话协作 / Session Collaboration**.
+重启 DSH → **设置 → 会话协作**。
 
-1. Create two or three sessions (e.g. *command*, *backend*, *testing*) and give them a group.
-2. Send the *command* session a request like: *"implement a small Go API, have it tested, and give me the test report."*
-3. Watch the order move: dispatch → ack → handoff → test → handoff → verify → done.
+1. 建 2~3 个会话（如 *命令 / 后端 / 测试*），放进同一个分组。
+2. 给“命令”发一句：*“用 Go 写个小接口，测试一下，测试报告给我。”*
+3. 看单子跑：派单 → ack → 转交 → 测试 → 转交 → 验收 → 完成。
 
-## Concepts in 30 seconds
+## 30 秒理解
 
-1. **Owner** — whoever receives a request owns it, decides which parts are theirs, and dispatches the rest as one order with a `flow`.
-2. **Flow** — e.g. `[backend, testing]`. Each leg acknowledges, works, then hands off; the next session is woken automatically.
-3. **Receipt & acceptance** — the last leg hands back to the owner; the owner checks evidence (no re-running everything), closes and delivers.
-4. **Memory** — conclusions land in dated files; summaries and indexes are derived. A new session reads three files and continues.
+1. **主负责人**：谁接到需求谁负责，判断哪些自己做、哪些派出去（一单 flow）。
+2. **接力**：flow 里每一棒先 ack、再干活、然后 handoff；下一棒自动被唤醒。
+3. **回执与验收**：最后一棒交回主负责人；主负责人核证据（不重跑全套）、关单、交付。
+4. **记忆**：结论落日期文件，summary/INDEX 是派生文件；新会话读三个文件就能继续。
 
-## Tools
+## 工具面
 
-| Tool | Actions |
+| 工具 | 动作 |
 |---|---|
-| `wb_read` | `check` (three checks), `scene` (card + summary + memory), `order` (order + events + timeline), `board`, `search` |
-| `wb_write` | `note`, `progress`, `comment`, `task`, `submit`, `verify`, `reject`, `handoff`, `close`, `cancel`, `reopen` |
+| `wb_read` | `check`（三项检查）/ `scene`（卡+摘要+记忆）/ `order`（单+事件+时间线）/ `board` / `search` |
+| `wb_write` | `note` / `progress` / `comment` / `task` / `submit` / `verify` / `reject` / `handoff` / `close` / `cancel` / `reopen` |
 
-## Configuration (`_meta/config.json`)
+## 配置（`_meta/config.json`）
 
-| Key | Default | Meaning |
+| 键 | 默认 | 说明 |
 |---|---|---|
-| `dataRoot` | — | Collaboration data root (independent of the harness install) |
-| `inject` | `auto` | Inject the core constitution into `AGENTS.md` (auto/on/off) |
-| `seedOnCreate` | `true` | Send a seed message when creating a session |
-| `enginePort` | auto | Manual override for the local engine port (board links) |
-| `token.warn` / `token.context` | 60k / 120k | Context thresholds for reminders/handover |
-| `notice.enabled` | `false` | Auto-nudge on overdue orders |
-| `learn.autoApply` | `true` | Allow guarded auto-tuning of plugin defaults |
-| `theme` / `lang` | `auto` / `zh` | Board theme and UI language |
+| `dataRoot` | — | 协作数据根（与 harness 安装目录无关） |
+| `inject` | `auto` | 是否把核心宪法注入 `AGENTS.md`（auto/on/off） |
+| `seedOnCreate` | `true` | 新建会话时是否发 seed |
+| `enginePort` | 自动 | 手动覆盖本地引擎端口（看板链接） |
+| `token.warn` / `token.context` | 60k / 120k | 上下文阈值（提醒/交接） |
+| `notice.enabled` | `false` | 超时自动催办 |
+| `learn.autoApply` | `true` | 允许受控自动调优插件默认值 |
+| `theme` / `lang` | `auto` / `zh` | 看板主题 / UI 语言 |
 
-## Data layout
+## 数据目录
 
 ```
 <dataRoot>/
-├─ agents/<session>/        card.json, summary.md, memory/<date>/, sessions.jsonl
-├─ collab/<date>/           orders (dhNNN-*.md / .done.md / .cancelled.md), done-index.md
-├─ events/                  events.jsonl, violations.jsonl, plugin.log
-├─ _meta/                   config.json, registry.json, learn/, logs/
-├─ shared/                  global rules, playbooks, templates overrides
-├─ board/                   offline board page
-├─ skills/<session>/        SKILL.md
-└─ trash/                   recycle bin
+├─ agents/<会话>/          card.json、summary.md、memory/<日期>/、sessions.jsonl
+├─ collab/<日期>/          工单（dhNNN-*.md / .done.md / .cancelled.md）、done-index.md
+├─ events/                 events.jsonl、violations.jsonl、plugin.log
+├─ _meta/                  config.json、registry.json、learn/、logs/
+├─ shared/                 全局规则、playbooks、模板覆盖
+├─ board/                  离线看板页
+├─ skills/<会话>/          SKILL.md
+└─ trash/                  回收站
 ```
 
-## FAQ / troubleshooting
+## 常见问题
 
-- **Board shows old data** → check `/ops/selfcheck`; the engine caches the module at startup, so a plugin update needs a restart.
-- **Order stuck in “waiting”** → the assignee did not ack; after the stale window the owner is notified and the assignee is re-woken once.
-- **`close` rejected: evidence unreachable** → fix refs (relative paths resolve against the workspace; prefer absolute paths), then retry.
-- **A session was archived by the host** → bind or hand over to a fresh session from the settings page; archived sessions are frozen, not deleted.
-- **External DSH has no shell scripts** → the plugin’s self-check, board and tools are self-contained; only the optional “one-click self-test” wrapper is shell-specific.
+- **看板数据旧** → 先看 `/ops/selfcheck`；插件在引擎启动时加载，升级后需重启。
+- **单子一直“等待”** → 接单方没 ack；stale 窗口后负责人会收到通知，接单方会被再唤醒一次。
+- **关单被拒：证据不可达** → 修 refs（相对路径按工作区解析，建议用绝对路径）后重试。
+- **会话被 host 归档** → 在设置页重新绑定/交接；归档是冻结不是删除。
+- **外部 DSH 没有外壳脚本** → 插件自检、看板、工具都是自包含的；只有可选的“一键自检”包装依赖工作台。
 
-## Non-goals
+## 明确不做
 
-- Not an official DeepSeek product.
-- Does not switch sessions automatically, run background AI loops, or auto-edit the constitution/user rules.
-- No vector search, no multi-user permission model, no onboarding wizard (yet).
+- 不是 DeepSeek 官方产品。
+- 不自动切换会话、不跑后台 AI 循环、不自动改宪法/用户规则。
+- 暂无向量检索、多用户权限模型、新手引导。
 
-## Roadmap
+## 路线
 
-- Release 0.1.x: stability, external acceptance, docs.
-- Later: richer board analytics, configurable policies, English-first docs, 1.0 freeze of file formats.
+- 0.1.x：稳定性、外部验收、文档。
+- 之后：更丰富的看板分析、可配置策略、英文优先文档、`1.0` 冻结文件格式。
 
-## License
+## 许可
 
 MIT
