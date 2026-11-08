@@ -1,0 +1,54 @@
+{
+  "name": "dsh-workbench-core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Unofficial DSH plugin: multi-session collaboration with work orders, handoff, and file-based memory.",
+  "main": "lib/index.js",
+  "exports": {
+    ".": {
+      "default": "./lib/index.js"
+    },
+    "./client": "./client/client.js",
+    "./lib/*": "./lib/*",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "client",
+    "locale",
+    "docs",
+    "README.md",
+    "README.zh.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "dsh": {
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-settings"
+      ],
+      "platform": "web"
+    }
+  },
+  "license": "MIT",
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "dsh-plugin",
+    "cordis",
+    "multi-agent",
+    "collaboration",
+    "workflow",
+    "memory",
+    "handoff"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sessionhive/dsh-collab.git"
+  },
+  "homepage": "https://github.com/sessionhive/dsh-collab",
+  "bugs": {
+    "url": "https://github.com/sessionhive/dsh-collab/issues"
+  }
+}
