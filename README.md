@@ -183,6 +183,20 @@ tar -xzf dsh-workbench-core-0.1.0.tgz --strip-components=1 -C <profile>/node_mod
 - 0.1.x：稳定性、外部验收、文档。
 - 之后：更丰富的看板分析、可配置策略、英文优先文档、`1.0` 冻结文件格式。
 
+## 在 DSH 插件市场里发现
+
+本仓库自带一份格式 1 的市场索引：`market/index.json`（已用官方 `@deepseek-ai/dsh-plugin-market-index` 校验）。
+
+在 DSH 的 **插件 → Discover** 里「添加市场索引」，填入：
+
+```
+https://cdn.jsdelivr.net/gh/sessionhive/dsh-collab@main/market/index.json
+```
+
+之后即可在 Discover 中看到 `dsh-collab` 并一键安装（git 源，锁定提交）。
+
+> 备用 raw 地址：`https://raw.githubusercontent.com/sessionhive/dsh-collab/main/market/index.json`
+
 ## 贡献
 
 欢迎 issue 与小型 PR：见 [CONTRIBUTING.md](CONTRIBUTING.md)。

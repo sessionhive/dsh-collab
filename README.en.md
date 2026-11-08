@@ -183,6 +183,20 @@ Restart DSH → **Settings → 会话协作 / Session Collaboration**.
 - Release 0.1.x: stability, external acceptance, docs.
 - Later: richer board analytics, configurable policies, English-first docs, 1.0 freeze of file formats.
 
+## Find it in the DSH plugin market
+
+This repo ships a format-1 market index: `market/index.json` (validated with the official `@deepseek-ai/dsh-plugin-market-index`).
+
+In DSH, open **Plugins → Discover**, add a market index, and paste:
+
+```
+https://cdn.jsdelivr.net/gh/sessionhive/dsh-collab@main/market/index.json
+```
+
+`dsh-collab` then appears in Discover and can be installed with one click (git source pinned to a commit).
+
+> Raw alternative: `https://raw.githubusercontent.com/sessionhive/dsh-collab/main/market/index.json`
+
 ## Contributing
 
 Issues and small PRs are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
