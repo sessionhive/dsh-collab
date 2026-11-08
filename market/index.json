@@ -1,0 +1,40 @@
+{
+  "format": 1,
+  "title": {
+    "zh": "会话蜂巢 · DSH 插件市场",
+    "en": "SessionHive · DSH plugin market"
+  },
+  "description": {
+    "zh": "sessionhive 维护的 DSH 插件索引（目前：dsh-collab 会话协作）",
+    "en": "DSH plugin index maintained by sessionhive (currently: dsh-collab session collaboration)"
+  },
+  "plugins": [
+    {
+      "name": "dsh-workbench-core",
+      "title": {
+        "zh": "dsh-collab · 会话协作",
+        "en": "dsh-collab · Session Collaboration"
+      },
+      "description": {
+        "zh": "DSH 多会话协作插件：工单/交接/回执、文件记忆、看板、零 AI 学习。非官方社区项目。",
+        "en": "DSH multi-session collaboration plugin: work orders, handoff, receipts, file-based memory, board, zero-AI learning. Unofficial community project."
+      },
+      "author": "sessionhive",
+      "homepage": "https://github.com/sessionhive/dsh-collab",
+      "repository": {
+        "url": "https://github.com/sessionhive/dsh-collab"
+      },
+      "versions": [
+        {
+          "version": "0.1.0",
+          "publishTimestamp": 1794144227,
+          "source": {
+            "type": "git",
+            "url": "https://github.com/sessionhive/dsh-collab",
+            "commit": "197655c6b776b4983f086d3f61b4fdb04dcdd0c2"
+          }
+        }
+      ]
+    }
+  ]
+}
