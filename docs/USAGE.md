@@ -1,4 +1,4 @@
-# Usage Guide (dsh-collab / dsh-workbench-core 0.1.0)
+# Usage Guide (dsh-collab / @sessionhive/dsh-collab 0.1.0)
 
 > Full manual for users: install → first setup → daily collaboration → board/settings → memory & learning → upgrade & troubleshooting.
 > Chinese version: [使用说明.md](使用说明.md) · Main README: [../README.en.md](../README.en.md)
@@ -27,14 +27,14 @@ Three fixed actions: **dispatch** (create + wake first leg), **handoff**, **rece
 
 1. Extract the package into your profile's `node_modules`:
    ```bash
-   tar -xzf dsh-workbench-core-0.1.0.tgz --strip-components=1 \
-     -C <DSH_HOME>/profiles/<profile>/node_modules/dsh-workbench-core
+   tar -xzf @sessionhive/dsh-collab-0.1.0.tgz --strip-components=1 \
+     -C <DSH_HOME>/profiles/<profile>/node_modules/@sessionhive/dsh-collab
    ```
 2. Add an `insert` entry to that profile's `cordis.patch.yml`:
    ```yaml
    - insert:
        - id: workbench-core
-         name: dsh-workbench-core
+         name: '@sessionhive/dsh-collab'
          config:
            dataRoot: '/absolute/path/to/.dsh'
    ```
@@ -175,7 +175,7 @@ Changes apply on next use; no restart needed.
 ## 11. Upgrade / backup / rollback
 
 1. Back up the whole `dataRoot` and the plugin directory
-2. Upgrade: replace `node_modules/dsh-workbench-core` → **restart** → self-check
+2. Upgrade: replace `node_modules/@sessionhive/dsh-collab` → **restart** → self-check
 3. Rollback: restore the previous tarball; schema migrations are not guaranteed to downgrade (back up first)
 4. Version truth: `/plugin-info` shows loaded vs on-disk version
 

@@ -10,7 +10,7 @@
   },
   "plugins": [
     {
-      "name": "dsh-workbench-core",
+      "name": "@sessionhive/dsh-collab",
       "title": {
         "zh": "dsh-collab · 会话协作",
         "en": "dsh-collab · Session Collaboration"
@@ -29,9 +29,7 @@
           "version": "0.1.0",
           "publishTimestamp": 1794144227,
           "source": {
-            "type": "git",
-            "url": "https://github.com/sessionhive/dsh-collab",
-            "commit": "197655c6b776b4983f086d3f61b4fdb04dcdd0c2"
+            "type": "npm"
           }
         }
       ]

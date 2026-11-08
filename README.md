@@ -107,14 +107,17 @@
 # 你的 DSH profile 的 cordis.patch.yml
 - insert:
     - id: workbench-core
-      name: dsh-workbench-core
+      name: '@sessionhive/dsh-collab'
       config:
         dataRoot: '/你的/.dsh/绝对路径'   # 协作数据落在这里
 ```
 
 ```bash
-# 把包解压到 profile 的 node_modules（release tarball 或仓库源码）
-tar -xzf dsh-workbench-core-0.1.0.tgz --strip-components=1 -C <profile>/node_modules/dsh-workbench-core
+# 方式 1（推荐）：从 npm 安装
+npm install @sessionhive/dsh-collab
+# 方式 2：解压 release 里的 tgz 到 profile 的 node_modules
+tar -xzf sessionhive-dsh-collab-0.1.0.tgz --strip-components=1 \
+  -C <profile>/node_modules/@sessionhive/dsh-collab
 ```
 
 重启 DSH → **设置 → 会话协作**。
@@ -193,7 +196,7 @@ tar -xzf dsh-workbench-core-0.1.0.tgz --strip-components=1 -C <profile>/node_mod
 https://cdn.jsdelivr.net/gh/sessionhive/dsh-collab@main/market/index.json
 ```
 
-之后即可在 Discover 中看到 `dsh-collab` 并一键安装（git 源，锁定提交）。
+之后即可在 Discover 中看到 `dsh-collab` 并一键安装（npm 源，或 git 源锁定提交）。
 
 > 备用 raw 地址：`https://raw.githubusercontent.com/sessionhive/dsh-collab/main/market/index.json`
 

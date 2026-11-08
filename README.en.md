@@ -107,14 +107,17 @@ Running many AI sessions in one workspace looks great until it doesn't:
 # cordis.patch.yml of your DSH profile
 - insert:
     - id: workbench-core
-      name: dsh-workbench-core
+      name: '@sessionhive/dsh-collab'
       config:
         dataRoot: '/absolute/path/to/.dsh'   # where collaboration data lives
 ```
 
 ```bash
-# install the package into your profile's node_modules (release tarball or repo)
-tar -xzf dsh-workbench-core-0.1.0.tgz --strip-components=1 -C <profile>/node_modules/dsh-workbench-core
+# option 1 (recommended): install from npm
+npm install @sessionhive/dsh-collab
+# option 2: extract the release tarball into your profile node_modules
+tar -xzf sessionhive-dsh-collab-0.1.0.tgz --strip-components=1 \
+  -C <profile>/node_modules/@sessionhive/dsh-collab
 ```
 
 Restart DSH → **Settings → 会话协作 / Session Collaboration**.
@@ -193,7 +196,7 @@ In DSH, open **Plugins → Discover**, add a market index, and paste:
 https://cdn.jsdelivr.net/gh/sessionhive/dsh-collab@main/market/index.json
 ```
 
-`dsh-collab` then appears in Discover and can be installed with one click (git source pinned to a commit).
+`dsh-collab` then appears in Discover and can be installed with one click (npm source, or a git source pinned to a commit).
 
 > Raw alternative: `https://raw.githubusercontent.com/sessionhive/dsh-collab/main/market/index.json`
 

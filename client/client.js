@@ -11,7 +11,7 @@
  * 生效：保存即写数据文件；client 注入插件要**重启工作台**才加载新版本。
  */
 window.__ModuleLoader__.load({
-  id: 'dsh-workbench-core',
+  id: '@sessionhive/dsh-collab',
   factory: (require) => {
     var module = { exports: {} };
     var exports = module.exports;

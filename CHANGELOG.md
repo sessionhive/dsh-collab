@@ -1,4 +1,4 @@
-# CHANGELOG · dsh-workbench-core
+# CHANGELOG · @sessionhive/dsh-collab
 
 ## 0.1.0 — 公开发布
 
