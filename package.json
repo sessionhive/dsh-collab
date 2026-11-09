@@ -1,7 +1,6 @@
 {
   "name": "@sessionhive/dsh-collab",
-  "version": "0.1.0",
-  "private": true,
+  "version": "0.1.1",
   "type": "module",
   "description": "Unofficial DSH plugin: multi-session collaboration with work orders, handoff, and file-based memory.",
   "main": "lib/index.js",
@@ -47,7 +46,7 @@
     "type": "git",
     "url": "git+https://github.com/sessionhive/dsh-collab.git"
   },
-  "homepage": "https://github.com/sessionhive/dsh-collab",
+  "homepage": "https://github.com/sessionhive/dsh-collab#readme",
   "bugs": {
     "url": "https://github.com/sessionhive/dsh-collab/issues"
   }

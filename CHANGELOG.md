@@ -1,5 +1,12 @@
 # CHANGELOG · @sessionhive/dsh-collab
 
+## 0.1.1 — 2026-11-09
+
+- Identity: `sync-registry` now refreshes each `agents/<id>/card.json` (panels/sessions/name/group) from `scenarios` while preserving human-written fields; registry/scene-index/card derive from a single source.
+- New `GET /plugins/workbench-core/ops/identity-check` (also in the one-click self-check): compares scenarios/registry/card/scene-index and reports differences.
+- Path resolution: one `dataHome()` in the shell (`DSH_CUSTOMER_HOME → <root>/引擎数据/.dsh → DSH_HOME`); removed `引擎/.dsh` fallbacks.
+- Session lifecycle: shell create/handover/archive/rename scripts unified through `_身份落盘.mjs` (plugin `/rebuild-index` first, shared sync fallback); removed legacy 场景记忆 paths.
+- Housekeeping: old GUI backups and historical tools moved to the backup area; docs list them as retired. UI unchanged.
 ## 0.1.0 — 公开发布
 
 > 早期内部迭代略过；本版为首个公开版本。
